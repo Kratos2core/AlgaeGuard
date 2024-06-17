@@ -2,7 +2,6 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
-import folium
 from sklearn.model_selection import train_test_split, GridSearchCV
 from sklearn.preprocessing import StandardScaler
 from sklearn.ensemble import RandomForestClassifier
@@ -13,7 +12,6 @@ from email.mime.multipart import MIMEMultipart
 from email.mime.base import MIMEBase
 from email import encoders
 import os
-import pwinput
 from geopy.geocoders import Nominatim
 
 # Load the dataset
@@ -87,7 +85,10 @@ def get_coordinates(location):
         return None, None
 
 # Function to send email alert with heatmap
-def send_alert(sender_email, app_password, receiver_email, location, fig_path):
+def send_alert(receiver_email, location, fig_path):
+    sender_email = "algaeguard@gmail.com"
+    app_password = "kbed nbsh tatl thjk"
+    
     message = MIMEMultipart("alternative")
     message["Subject"] = "Harmful Algal Bloom Alert"
     message["From"] = sender_email
@@ -138,10 +139,6 @@ water_temp = get_float_input("Water Temperature (°C): ")
 salinity = get_float_input("Salinity: ")
 receiver_email = input("Enter the receiver's email for alerts: ")
 
-# Email credentials
-sender_email = input("Enter your Gmail address: ")
-app_password = pwinput.pwinput("Enter your Gmail app password: ")
-
 # Perform prediction
 hab_present = predict_hab(latitude, longitude, water_temp, salinity)
 location_info = f"{location} (Latitude: {latitude}, Longitude: {longitude})"
@@ -156,6 +153,6 @@ plt.savefig(fig_path)
 # Display prediction and send alert
 if hab_present:
     print("Warning: Harmful Algal Bloom (HAB) detected.")
-    send_alert(sender_email, app_password, receiver_email, location_info, fig_path)
+    send_alert(receiver_email, location_info, fig_path)
 else:
     print("No Harmful Algal Bloom (HAB) detected.")
